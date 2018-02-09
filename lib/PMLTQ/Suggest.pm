@@ -1,6 +1,9 @@
 package PMLTQ::Suggest;
 
 use TredMacro;
+use Scalar::Util qw(weaken);
+use PMLTQ::Common qw(:all);
+use Treex::PML::Schema::Constants;
 use PMLTQ::Suggest::Utils;
 
 
@@ -11,59 +14,49 @@ use PMLTQ::Suggest::Utils;
 
 sub make_pmltq {
   my ($positions,%opts)=@_;
-
-
-  if (exists &PMLTQextenssion::nodes_to_pmltq) {
 warn("[0.0]\n");
 ##    my $cur = CurrentFile();
 ##    my @open_files = ($cur ? ($cur, TredMacro::GetSecondaryFiles($cur)) : ());
-my @open_files;    
-    my %cur_fsfiles; @cur_fsfiles{@open_files}=();
-    # my $keep_cur;
-    my %fsfiles;
-    my @new_fsfiles;
+  my @open_files;    
+  my %cur_fsfiles; @cur_fsfiles{@open_files}=();
+  # my $keep_cur;
+  my %fsfiles;
+  my @new_fsfiles;
 warn("[0.1]\n");
-    foreach my $f (map $_->[0], @$positions) {
+  foreach my $f (map $_->[0], @$positions) {
 warn("[1.0] LOOP $f\n");
-      next if exists $fsfiles{$f};
-#      my ($open) = grep { Treex::PML::IO::is_same_filename($_->filename, $f) }
-#        @open_files;
-#      if ($open) {
-#        # $keep_cur=1 if !$keep_cur and exists($cur_fsfiles{$open});
-#        $fsfiles{$f}=$open;
-#      } else {
-        my $fsfile = PMLTQ::Suggest::Utils::open_file($f);
+    next if exists $fsfiles{$f};
+#    my ($open) = grep { Treex::PML::IO::is_same_filename($_->filename, $f) }
+#      @open_files;
+#    if ($open) {
+#      # $keep_cur=1 if !$keep_cur and exists($cur_fsfiles{$open});
+#      $fsfiles{$f}=$open;
+#    } else {
+      my $fsfile = PMLTQ::Suggest::Utils::open_file($f);
 warn("[1.1] fsfile: $fsfile\n");
-        my @new = ($fsfile, TredMacro::GetSecondaryFiles($fsfile));
-        push @new_fsfiles, @new;
-        push @open_files, @new;
-        $fsfiles{$_->filename}=$_ for @new; # including $fsfile
-        $fsfiles{$f}=$fsfile; # $f may be different from $fsfile->filename
-#      }      
-    }
-    my @nodes;
-    for my $pos (@$positions) {
-warn("LOOP pozitions @$pos");
-      my $win = { FSFile => $fsfiles{$pos->[0]} };
-      unless (PMLTQ::Suggest::Utils::apply_file_suffix($win,$pos->[1]) and $win->{currentNode}) {
-        warn "Didn't find node [@$pos, @{[%$win]}]\n";
-        return;
-      }
-      push @nodes, [ $win->{currentNode}, $win->{FSFile} ];
-    }
-    print STDERR "generating query";
-    return PMLTQextenssion::nodes_to_pmltq(\@nodes,\%opts);
+      my @new = ($fsfile, TredMacro::GetSecondaryFiles($fsfile));
+      push @new_fsfiles, @new;
+      push @open_files, @new;
+      $fsfiles{$_->filename}=$_ for @new; # including $fsfile
+      $fsfiles{$f}=$fsfile; # $f may be different from $fsfile->filename
+#    }      
   }
-  print STDERR "Method nodes_to_pmltq not available\n";
-  return;
+  my @nodes;
+  for my $pos (@$positions) {
+warn("LOOP pozitions @$pos");
+    my $win = { FSFile => $fsfiles{$pos->[0]} };
+    unless (PMLTQ::Suggest::Utils::apply_file_suffix($win,$pos->[1]) and $win->{currentNode}) {
+      warn "Didn't find node [@$pos, @{[%$win]}]\n";
+      return;
+    }
+    push @nodes, [ $win->{currentNode}, $win->{FSFile} ];
+  }
+  print STDERR "generating query";
+  return nodes_to_pmltq(\@nodes,\%opts);
 }
 
 
 
-package PMLTQextenssion;
-
-use PMLTQ::Common qw(:all);
-use Treex::PML::Schema::Constants;
 
 sub nodes_to_pmltq {
   my ($nodes,$opts)=@_;
@@ -219,14 +212,14 @@ warn("resolve_pmlref");
     my $reffile = $refs && $refs->{$file_id};
     if (UNIVERSAL::DOES::does($reffile,'Treex::PML::Document')) {
 warn("resolve_pmlref DOCUMENT");
-      return PML::GetNodeByID($id,$reffile);
+      return GetNodeByID($id,$reffile);
     } elsif (UNIVERSAL::DOES::does($reffile,'Treex::PML::Instance')) {
 warn("resolve_pmlref INSTANCE");
       return $reffile->lookup_id($id);
     }
   } elsif ($ref=~m{\#?([^#]+)}) {
 warn("resolve_pmlref LOCAL $1");
-    return PML::GetNodeByID($1);
+    return GetNodeByID($1);
   }
   return undef;
 }
@@ -312,9 +305,6 @@ warn("[6.1] member_to_pmltq $out");
   return $out;
 }
 
-package PML;
-
-use Scalar::Util qw(weaken);
 
 =item PML::GetNodeByID($id_or_ref,$fsfile?)
 
