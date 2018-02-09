@@ -1,22 +1,15 @@
 package PMLTQ::Suggest;
 
-use TredMacro;
 use Scalar::Util qw(weaken);
 use PMLTQ::Common qw(:all);
 use Treex::PML::Schema::Constants;
 use PMLTQ::Suggest::Utils;
 
-
-
-
-
-
-
 sub make_pmltq {
   my ($positions,%opts)=@_;
 warn("[0.0]\n");
 ##    my $cur = CurrentFile();
-##    my @open_files = ($cur ? ($cur, TredMacro::GetSecondaryFiles($cur)) : ());
+##    my @open_files = ($cur ? ($cur, PMLTQ::Suggest::Utils::GetSecondaryFiles($cur)) : ());
   my @open_files;    
   my %cur_fsfiles; @cur_fsfiles{@open_files}=();
   # my $keep_cur;
@@ -34,7 +27,7 @@ warn("[1.0] LOOP $f\n");
 #    } else {
       my $fsfile = PMLTQ::Suggest::Utils::open_file($f);
 warn("[1.1] fsfile: $fsfile\n");
-      my @new = ($fsfile, TredMacro::GetSecondaryFiles($fsfile));
+      my @new = ($fsfile, PMLTQ::Suggest::Utils::GetSecondaryFiles($fsfile));
       push @new_fsfiles, @new;
       push @open_files, @new;
       $fsfiles{$_->filename}=$_ for @new; # including $fsfile
