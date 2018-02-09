@@ -1,0 +1,32 @@
+#!/usr/bin/env perl
+
+use warnings;
+use strict;
+
+use File::Spec;
+use File::Basename 'dirname';
+use lib File::Spec->rel2abs( File::Spec->catdir( dirname(__FILE__), File::Spec->updir, 'lib' ) );
+
+use PMLTQ::Suggest::Server;
+
+
+
+
+my %opts = @ARGV;
+my $port = ($opts{'--port'} || 8071);
+my $host = ($opts{'--host'} || 'localhost');
+my $prefork = ($opts{'--prefork'} || 0);
+my $data_dir = $opts{'--data-dir'};
+my $inputenc = "UTF-8";
+
+($data_dir && (-d $data_dir)) or die "Data directory must exist!";
+
+start_server();
+
+sub start_server {
+
+  my $server = PMLTQ::Suggest::Server->new($port);
+  $server->host($host);
+  $server->prefork($prefork);
+  $server->run();
+}
