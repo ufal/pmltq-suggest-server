@@ -54,13 +54,11 @@ sub first (&@) {
 # See Also      : parse_file_suffix()
 sub apply_file_suffix {
     my ( $win, $goto ) = @_;
-warn("apply file suffix");
     return if ( !defined $win );
     my $fsfile = $win->{FSFile};
     return if !( defined $fsfile && defined $goto && $goto ne ''); # $EMPTY_STR );
 
     if ( $goto =~ m/^##([0-9]+)/ ) {
-warn("[1] apply file suffix");
 
         # handle cases like '##123'
         my $no = int( $1 - 1 );
@@ -68,7 +66,6 @@ warn("[1] apply file suffix");
         return 0 if $win->{treeNo} != $no;
     }
     elsif ( $goto =~ /^#([0-9]+)/ ) {
-warn("[2] apply file suffix");
 
         # handle cases like '#123'
         # this is PDT 1.0-specific code, sorry
@@ -83,7 +80,6 @@ warn("[2] apply file suffix");
         $win->{treeNo} = $no;
     }
     elsif ( $goto =~ /^#([^#]+)$/ ) {
-warn("[3] apply file suffix");
 
         # handle cases like '#a123'
         my $id = $1;
@@ -92,7 +88,6 @@ warn("[3] apply file suffix");
             if ( UNIVERSAL::isa( $id_hash, 'HASH' )
                 && exists $id_hash->{$id} )
             {
-warn("[3.1] apply file suffix");
                 my $node = $id_hash->{$id};
 
                 # we would like to use Treex::PML::Index() here, but can't
@@ -103,10 +98,8 @@ warn("[3.1] apply file suffix");
                     $list->[$_] == $root;
                 }
                 0 .. $#$list;
-warn("[3.1_] apply file suffix");
 
                 if ( defined $root and !defined($n) ) {
-warn("[3.2] apply file suffix");
                     $n = _find_tree_no( $fsfile, $root, $list );
 
                     # exit from _find_tree_no() function
@@ -115,13 +108,11 @@ warn("[3.2] apply file suffix");
                     }
                 }
                 if ( defined($n) ) {
-warn("[3.3] apply file suffix");
                     $win->{treeNo}      = $n;
                     $win->{currentNode} = $node;
                     return 1;
                 }
                 else {
-warn("[3.4] apply file suffix");
                     return 0;
                 }
             }

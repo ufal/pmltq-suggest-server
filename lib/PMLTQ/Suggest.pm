@@ -15,36 +15,22 @@ use PMLTQ::Suggest::Utils;
 
 sub make_pmltq {
   my ($positions,%opts)=@_;
-warn("[0.0]\n");
-##    my $cur = CurrentFile();
-##    my @open_files = ($cur ? ($cur, PMLTQ::Suggest::Utils::GetSecondaryFiles($cur)) : ());
   my @open_files;    
   my %cur_fsfiles; @cur_fsfiles{@open_files}=();
   # my $keep_cur;
   my %fsfiles;
   my @new_fsfiles;
-warn("[0.1]\n");
   foreach my $f (map $_->[0], @$positions) {
-warn("[1.0] LOOP $f\n");
     next if exists $fsfiles{$f};
-#    my ($open) = grep { Treex::PML::IO::is_same_filename($_->filename, $f) }
-#      @open_files;
-#    if ($open) {
-#      # $keep_cur=1 if !$keep_cur and exists($cur_fsfiles{$open});
-#      $fsfiles{$f}=$open;
-#    } else {
       my $fsfile = PMLTQ::Suggest::Utils::open_file($f);
-warn("[1.1] fsfile: $fsfile\n");
       my @new = ($fsfile, PMLTQ::Suggest::Utils::GetSecondaryFiles($fsfile));
       push @new_fsfiles, @new;
       push @open_files, @new;
       $fsfiles{$_->filename}=$_ for @new; # including $fsfile
       $fsfiles{$f}=$fsfile; # $f may be different from $fsfile->filename
-#    }      
   }
   my @nodes;
   for my $pos (@$positions) {
-warn("LOOP pozitions @$pos");
     my $win = { FSFile => $fsfiles{$pos->[0]} };
     unless (PMLTQ::Suggest::Utils::apply_file_suffix($win,$pos->[1]) and $win->{currentNode}) {
       warn "Didn't find node [@$pos, @{[%$win]}]\n";
@@ -61,7 +47,6 @@ warn("LOOP pozitions @$pos");
 
 sub nodes_to_pmltq {
   my ($nodes,$opts)=@_;
-warn("PMLTQextenssion::nodes_to_pmltq");
   $opts||={};
   my %id_member;
   my $name = 'a';
@@ -82,7 +67,6 @@ warn("PMLTQextenssion::nodes_to_pmltq");
   my %parents=();
   my %connect;
   for my $m (@$nodes) {
-warn("NODE LOOP $m");
     my ($n,$fsfile)=@$m;
     my $parent = $n->parent;
     $parents{$parent}||=$n;
@@ -107,7 +91,6 @@ warn("NODE LOOP $m");
       }
     }
   }
-warn("End of LOOP @$nodes");
   $opts->{connect}=\%connect;
   return join(";\n\n", map {
     node_to_pmltq($_->[0],$_->[1],$opts)}
@@ -116,7 +99,6 @@ warn("End of LOOP @$nodes");
 
 sub node_to_pmltq {
   my ($node,$fsfile,$opts)=@_;
-warn("node_to_pmltq $node");
   return unless $node;
   my $type = $node->type;
   return unless $type;
@@ -125,21 +107,17 @@ warn("node_to_pmltq $node");
 
   my $var = $opts->{id2name} && $opts->{id2name}{$node->{_id_member_name($node->type)}};
   $var = ' $'.$var.' := ' if $var;
-warn("[4.0] nodes_to_pmltq");
   $out .= PMLTQ::Common::DeclToQueryType($type).$var." [\n";
   foreach my $attr ('#name',$type->get_normal_fields) {
-warn("[4.1] nodes_to_pmltq");
     my $m = $type->get_member_by_name($attr);
     # next if $m and $m->get_role() eq '#ID';
     my $val = $node->{$attr};
     next unless defined $val;
     $m = $type->get_member_by_name($attr.'.rf') unless $m;
     if ($attr eq '#name') {
-warn("[4.2.1] $out");
       $out .= $indent.qq{  name() = }._pmltq_string($val).qq{,\n};
       next;
     } elsif (!$m) {
-warn("[4.2.1] $out");
       $out .= $indent." # $attr ???;" unless $opts->{no_comments};
       next;
     }
@@ -147,7 +125,6 @@ warn("[4.2.1] $out");
     next if $opts->{exclude} and $opts->{exclude}{$name};
     $out.=member_to_pmltq($name,$val,$m,$indent.'  ',$fsfile,$opts);
   }
-warn("[5.0] nodes_to_pmltq");
   if (defined $opts->{rbrothers}) {
     $out .= $indent.qq{  # rbrothers()=$opts->{rbrothers},\n} unless $opts->{no_comments};
   }
@@ -185,7 +162,6 @@ warn("[5.0] nodes_to_pmltq");
 
 sub _id_member_name {
   my ($type)=@_;
-warn("_id_member_name");
   return undef unless $type;
   if ($type->get_decl_type == PML_ELEMENT_DECL) {
     $type = $type->get_content_decl;
@@ -206,20 +182,16 @@ sub _pmltq_string {
 
 sub resolve_pmlref {
   my ($ref,$fsfile)=@_;
-warn("resolve_pmlref");
   if ($ref=~m{^(.+?)\#(.+)$}) {
     my ($file_id,$id)=($1,$2);
     my $refs = $fsfile->appData('ref');
     my $reffile = $refs && $refs->{$file_id};
     if (UNIVERSAL::DOES::does($reffile,'Treex::PML::Document')) {
-warn("resolve_pmlref DOCUMENT");
       return GetNodeByID($id,$reffile);
     } elsif (UNIVERSAL::DOES::does($reffile,'Treex::PML::Instance')) {
-warn("resolve_pmlref INSTANCE");
       return $reffile->lookup_id($id);
     }
   } elsif ($ref=~m{\#?([^#]+)}) {
-warn("resolve_pmlref LOCAL $1");
     return GetNodeByID($1);
   }
   return undef;
@@ -228,13 +200,11 @@ warn("resolve_pmlref LOCAL $1");
 sub member_to_pmltq {
   my ($name, $val, $type, $indent, $fsfile, $opts)=@_;
   my $out;
-warn("[6.0] member_to_pmltq");
   my $mtype = $name eq 'content()' ? $type : $type->get_knit_content_decl;
   if ($mtype->get_decl_type == PML_ALT_DECL and !UNIVERSAL::DOES::does($val,'Treex::PML::Alt')) {
     $mtype = $mtype->get_knit_content_decl;
   }
   if (not ref($val)) {
-warn("[6.0.0] member_to_pmltq");
     if (!$mtype->is_atomic) {
       $out.=$indent."# ignoring $name\n",
     } else {
@@ -260,7 +230,6 @@ warn("[6.0.0] member_to_pmltq");
       }
     }
   } elsif (UNIVERSAL::DOES::does($val,'Treex::PML::List')) {
-warn("[6.0.1] member_to_pmltq");
     if ($mtype->is_ordered) {
       my $i=1;
       foreach my $v (@$val) {
@@ -302,7 +271,6 @@ warn("[6.0.1] member_to_pmltq");
       $i++;
     }
   }
-warn("[6.1] member_to_pmltq $out");
   return $out;
 }
 
