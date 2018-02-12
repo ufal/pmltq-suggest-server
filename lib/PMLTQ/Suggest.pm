@@ -1,5 +1,13 @@
 package PMLTQ::Suggest;
 
+# ABSTRACT: Tool for generating simple PMLTQ query based on given nodes
+
+=head1 DESCRIPTION
+
+This is an implementation of a Suggest server and a plugin for PML-TQ command-line client.
+
+=cut
+
 use Scalar::Util qw(weaken);
 use PMLTQ::Common qw(:all);
 use Treex::PML::Schema::Constants;
@@ -299,12 +307,12 @@ warn("[6.1] member_to_pmltq $out");
 }
 
 
-=item PML::GetNodeByID($id_or_ref,$fsfile?)
+#=item PML::GetNodeByID($id_or_ref,$fsfile?)
 
-Looks up a node from the current file (or given fsfile) by its ID (or
-PMLREF - i.e. the ID preceded by a file prefix of the form C<xy#>).
+#Looks up a node from the current file (or given fsfile) by its ID (or
+#PMLREF - i.e. the ID preceded by a file prefix of the form C<xy#>).
 
-=cut
+#=cut
 
 sub GetNodeByID {
     my ( $rf, $fsfile ) = @_;
@@ -316,15 +324,15 @@ sub GetNodeByID {
     return GetNodeHash($fsfile)->{$rf};
 }
 
-=item PML::GetNodeHash($fsfile?)
+#=item PML::GetNodeHash($fsfile?)
 
-Return a reference to a hash indexing nodes in a given file (or the
-current file if no argument is given). If such a hash was not yet
-created, it is built upon the first call to this function (or other
-functions calling it, such as C<GetNodeByID>. Use C<clearNodeHash> to
-clear the hash.
+#Return a reference to a hash indexing nodes in a given file (or the
+#current file if no argument is given). If such a hash was not yet
+#created, it is built upon the first call to this function (or other
+#functions calling it, such as C<GetNodeByID>. Use C<clearNodeHash> to
+#clear the hash.
 
-=cut
+#=cut
 
 sub GetNodeHash {
     if (!ref $_[0]) {

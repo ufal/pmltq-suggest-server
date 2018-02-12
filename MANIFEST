@@ -1,0 +1,14 @@
+Build.PL
+INSTALL
+LICENSE
+MANIFEST
+META.json
+META.yml
+README
+README.md
+lib/PMLTQ/Command/suggest.pm
+lib/PMLTQ/Suggest.pm
+lib/PMLTQ/Suggest/Server.pm
+lib/PMLTQ/Suggest/Utils.pm
+script/pmltq-suggest-server
+t/00-compile.t
