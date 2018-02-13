@@ -71,7 +71,6 @@ sub servePMLTQ {
   my @positions;
   foreach my $p (@paths) {
     my ($path, $goto)=PMLTQ::Suggest::Utils::parse_file_suffix($p);
-print STDERR '['.localtime()."] ============ $path $goto\n";
     $path = URI->new($path)->canonical->as_string;
     if ($path=~m{/\.\./} or $path !~ $permitted_paths_re) {
       print STDERR '['.localtime()."] Path $path not permitted\n";

@@ -81,20 +81,20 @@ sub nodes_to_pmltq {
     } else {
       $parent = $parent && $parent->parent;
       while ($parent) {
-	if (exists $marked{$parent}) {
-	  # print STDERR "$node2name{$parent} has descendant $node2name{$n}\n";
-	  push @{$connect{$parent}{descendant}}, $n;
-	  $marked{$n}=1;
-	  last;
-	}
-	$parent = $parent->parent;
+        if (exists $marked{$parent}) {
+          # print STDERR "$node2name{$parent} has descendant $node2name{$n}\n";
+          push @{$connect{$parent}{descendant}}, $n;
+          $marked{$n}=1;
+          last;
+        }
+        $parent = $parent->parent;
       }
     }
   }
   $opts->{connect}=\%connect;
   return join(";\n\n", map {
     node_to_pmltq($_->[0],$_->[1],$opts)}
-		grep { !$marked{$_->[0]} } @$nodes);
+                grep { !$marked{$_->[0]} } @$nodes);
 }
 
 sub node_to_pmltq {
@@ -132,12 +132,12 @@ sub node_to_pmltq {
     my $rels = $opts->{connect}{$node};
     if ($rels) {
       foreach my $rel (sort keys %$rels) {
-	foreach my $n (@{$rels->{$rel}}) {
-	  $out.='  '.$indent.$rel.' '.node_to_pmltq($n,$fsfile,{
-	    %$opts,
-	    indent=>$indent.'  ',
-	  }).",\n";
-	}
+        foreach my $n (@{$rels->{$rel}}) {
+        $out.='  '.$indent.$rel.' '.node_to_pmltq($n,$fsfile,{
+          %$opts,
+          indent=>$indent.'  ',
+                }).",\n";
+        }
       }
     }
   } elsif ($opts->{children} or $opts->{descendants}) {
@@ -145,10 +145,10 @@ sub node_to_pmltq {
     my $son = $node->firstson;
     while ($son) {
       $out.='  '.$indent.'child '.node_to_pmltq($son,$fsfile,{
-	%$opts,
-	indent=>$indent.'  ',
-	children => 0,
-	rbrothers=>$i,
+        %$opts,
+        indent=>$indent.'  ',
+        children => 0,
+        rbrothers=>$i,
       }).",\n";
       $i++;
       $son=$son->rbrother;
@@ -210,35 +210,35 @@ sub member_to_pmltq {
     } else {
       my $is_pmlref = (($mtype->get_decl_type == PML_CDATA_DECL) and ($mtype->get_format eq 'PMLREF')) ? 1 : 0;
       if ($type and ($type->get_role() =~ /^#(ID|ORDER)$/ or $is_pmlref)) {
-	if ($is_pmlref and $opts->{id2name} and $val=~/(?:^.*?\#)?(.+)$/ and $opts->{id2name}{$1}) {
-	  $out .= $indent.qq{$name \$}.$opts->{id2name}{$1}.qq{,\n};
-	} elsif ($is_pmlref) {
-	  my $target = resolve_pmlref($val,$fsfile);
-	  if ($target && $target->type) {
-	    $out.=$indent.'# '.$name.' '.PMLTQ::Common::DeclToQueryType( $target->type ).qq{ [ ],\n};
-	  } else {
-	    $out.=$indent.'# '.$name.qq{->[ ],\n};
-	  }
-	} elsif ($opts->{no_comments}) {
-	  return;
-	} else {
-	  $out.=$indent.'# '.qq{$name = }._pmltq_string($val).qq{,\n};
-	}
+        if ($is_pmlref and $opts->{id2name} and $val=~/(?:^.*?\#)?(.+)$/ and $opts->{id2name}{$1}) {
+          $out .= $indent.qq{$name \$}.$opts->{id2name}{$1}.qq{,\n};
+        } elsif ($is_pmlref) {
+          my $target = resolve_pmlref($val,$fsfile);
+          if ($target && $target->type) {
+            $out.=$indent.'# '.$name.' '.PMLTQ::Common::DeclToQueryType( $target->type ).qq{ [ ],\n};
+          } else {
+            $out.=$indent.'# '.$name.qq{->[ ],\n};
+          }
+        } elsif ($opts->{no_comments}) {
+          return;
+        } else {
+          $out.=$indent.'# '.qq{$name = }._pmltq_string($val).qq{,\n};
+        }
       } else {
-	$out.=$indent;
-	$out.=qq{$name = }._pmltq_string($val).qq{,\n};
+        $out.=$indent;
+        $out.=qq{$name = }._pmltq_string($val).qq{,\n};
       }
     }
   } elsif (UNIVERSAL::DOES::does($val,'Treex::PML::List')) {
     if ($mtype->is_ordered) {
       my $i=1;
       foreach my $v (@$val) {
-	$out.=member_to_pmltq("$name/[$i]",$v,$mtype,$indent,$fsfile,$opts);
-	$i++;
+        $out.=member_to_pmltq("$name/[$i]",$v,$mtype,$indent,$fsfile,$opts);
+        $i++;
       }
     } else {
       foreach my $v (@$val) {
-	$out.=member_to_pmltq($name,$v,$mtype,$indent,$fsfile,$opts);
+        $out.=member_to_pmltq($name,$v,$mtype,$indent,$fsfile,$opts);
       }
     }
   } elsif (UNIVERSAL::DOES::does($val,'Treex::PML::Alt')) {
@@ -254,8 +254,8 @@ sub member_to_pmltq {
       next unless defined $v;
       $m = $mtype->get_member_by_name($attr.'.rf') unless $m;
       if (!$m) {
-	$out .= " # $attr ???;" unless $opts->{no_comments};
-	next;
+        $out .= " # $attr ???;" unless $opts->{no_comments};
+        next;
       }
       my $n = $attr eq '#content' ? 'content()' : $attr;
       next if $opts->{exclude} and $opts->{exclude}{$n};
@@ -285,7 +285,7 @@ sub member_to_pmltq {
 sub GetNodeByID {
     my ( $rf, $fsfile ) = @_;
     if (!defined $fsfile) {
-    	warn("GetNodeByID TODO: FIX THIS !!!");
+            warn("GetNodeByID TODO: FIX THIS !!!");
         #$fsfile = $grp->{FSFile};
     }
     $rf =~ s/^.*#//;
