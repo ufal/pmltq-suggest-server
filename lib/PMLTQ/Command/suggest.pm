@@ -36,7 +36,9 @@ sub run {
   my $pmltq = PMLTQ::Suggest::make_pmltq(
     \@positions
    );
+  Encode::_utf8_off($pmltq);
   print "$pmltq\n";
+  return 1;
 }
 
 =head1 SYNOPSIS
