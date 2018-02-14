@@ -16,11 +16,8 @@ my %opts = @ARGV;
 my $port = ($opts{'--port'} || 8071);
 my $host = ($opts{'--host'} || 'localhost');
 my $prefork = ($opts{'--prefork'} || 0);
-my $data_dir = $opts{'--data-dir'};
 my $resources_path = $opts{'--resources-path'}; # resources should be in any subdirectory. You can set TrEd extenssions directory.
 my $inputenc = "UTF-8";
-
-($data_dir && (-d $data_dir)) or die "Data directory must exist!";
 
 start_server();
 
