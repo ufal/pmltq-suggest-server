@@ -33,12 +33,11 @@ my @message_tests = (
 
       [["GET /?p=treebanks/pdt_test/cmpr9410_001.t.gz HTTP/1.1",""], '/Not found/', '[GET] Not found - path has been permitted'],
       [["GET /?p=".File::Spec->rel2abs( dirname(__FILE__))."/treebanks/pdt_test/data/cmpr9410_001.t.gz HTTP/1.1",""], '/Not found/', '[GET] Not found - path does not contain address'],
-      [["GET /?p=".File::Spec->rel2abs( dirname(__FILE__))."/FILE#ID HTTP/1.1",""], '/Internal server error/', '[GET] nonexisting file'],
-      [["GET /?p=".File::Spec->rel2abs( dirname(__FILE__))."/treebanks/pdt_test/data/cmpr9410_001.t.gz#t-cmpr9410-001-p2s1w2 HTTP/1.1",""], '/t-cmpr9410-001-p2s1w2/', '[GET] #######'],
+      [["GET /?p=".File::Spec->rel2abs( dirname(__FILE__))."/FILE#ID HTTP/1.1",""], '/No such file or directory/', '[GET] nonexisting file'],
+      [["GET /?p=".File::Spec->rel2abs( dirname(__FILE__))."/treebanks/pdt_test/data/cmpr9410_001.t.gz#ID HTTP/1.1",""], '/Empty query!/', '[GET] nonexisting ID'],
+      [["GET /?p=".File::Spec->rel2abs( dirname(__FILE__))."/treebanks/noschema_test/noschema.pml#ID HTTP/1.1",""], '/no suitable backend/', '[GET] no schema'],
 
-
-
-
+      [["GET /?p=".File::Spec->rel2abs( dirname(__FILE__))."/treebanks/pdt_test/data/cmpr9410_001.t.gz#t-cmpr9410-001-p2s1w2 HTTP/1.1",""], '/t-cmpr9410-001-p2s1w2/', '[GET] suggest one node'],
 );
 foreach my $message_test (@message_tests) {
   my ($message, $expected, $description) = @$message_test;
