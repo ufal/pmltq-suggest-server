@@ -29,7 +29,7 @@ sub handle_request {
       }
   };
 
-  serverError($cgi) if ($@);
+  serverError($cgi, $@) if ($@);
 }
 
 # Maximum number of servers to prefork
@@ -51,11 +51,19 @@ sub notFound {
 }
 
 sub serverError {
-  my ($cgi)=@_;
+  my ($cgi, $error)=(@_,'');
+  $error =~ tr/\n/ /;
+  $error =~ s/ at .*$//;
+  $error =~ s/\.\.\.propagated.*$//;
+  print STDERR '['.localtime()."] $error\n";
+  $error =~ s/'\/[^']*\/([^\/']*)'/'$1'/;
+
   print "HTTP/1.0 500 Internal server error\r\n";
   print $cgi->header,
     $cgi->start_html('Internal server error'),
     $cgi->h1('Error occurred while processing request!'),
+    "\r\n",
+    $cgi->p($error),
     $cgi->end_html;
 }
 
@@ -81,15 +89,18 @@ sub servePMLTQ {
     }
     push @positions, [$path,$goto];
   }
-  my $pmltq = PMLTQ::Suggest::make_pmltq(
-    \@positions,
-    (@names ? (reserved_names => {map {$_=>1} @names}) : ()),
-   );
-  print STDERR '['.localtime()."] Serving PMLTQ for $paths: $pmltq\n";
+  my $pmltq;
+  eval {
+    $pmltq = PMLTQ::Suggest::make_pmltq(
+      \@positions,
+      (@names ? (reserved_names => {map {$_=>1} @names}) : ()),
+     );
+  };
   if (!defined $pmltq) {
-    print "HTTP/1.0 500 Internal Server Error\r\n\r\n";
-    return;
+    $@ = "Empty query! Possible error - unable to find node in file" unless $@;
+    die; # send error upper
   } else {
+    print STDERR '['.localtime()."] Serving PMLTQ for $paths: $pmltq\n";
     binmode(select());
     Encode::_utf8_off($pmltq);
     print "HTTP/1.0 200 OK\r\n";
