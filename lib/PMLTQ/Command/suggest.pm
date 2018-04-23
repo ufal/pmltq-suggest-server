@@ -43,7 +43,7 @@ sub run {
 
 =head1 SYNOPSIS
 
-  pmltq suggest <treebank_config>
+  pmltq suggest [--resources="path to resources directory"] --nodes "FILE2#NODE_ID1|FILE2#NODE_ID2|..."
 
 =head1 DESCRIPTION
 
