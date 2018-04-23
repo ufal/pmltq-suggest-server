@@ -12,7 +12,6 @@ before_install:
   - git config --global user.email $HOSTNAME":not-for-mail@travis-ci.org"
   - git fetch --unshallow || true
   - git fetch origin master:master
-  - git fetch origin releases:releases
   - git clone --depth=1 git://github.com/travis-perl/helpers ~/travis-perl-helpers
   - source ~/travis-perl-helpers/init
   - build-perl
