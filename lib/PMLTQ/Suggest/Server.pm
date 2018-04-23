@@ -4,7 +4,7 @@ use base qw(HTTP::Server::Simple::CGI);
 use URI;
 use URI::file;
 
-PMLTQ::Suggest::Utils;
+use PMLTQ::Suggest::Utils;
 use PMLTQ::Suggest;
 
 our $permitted_paths_re = '^(?:)/';
