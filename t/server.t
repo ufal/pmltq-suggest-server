@@ -38,13 +38,36 @@ my @message_tests = (
       [["GET /?p=".File::Spec->rel2abs( dirname(__FILE__))."/treebanks/noschema_test/noschema.pml#ID HTTP/1.1",""], '/no suitable backend/', '[GET] no schema'],
 
       [["GET /?p=".File::Spec->rel2abs( dirname(__FILE__))."/treebanks/pdt_test/data/cmpr9410_001.t.gz#t-cmpr9410-001-p2s1w2 HTTP/1.1",""], '/t-cmpr9410-001-p2s1w2/', '[GET] suggest one node'],
+      [["GET /?p=".join('|', map {File::Spec->rel2abs( dirname(__FILE__))."/treebanks/pdt_test/data/cmpr9410_001.t.gz#t-cmpr9410-001-p2s1w$_"} qw/2 1/)." HTTP/1.1",""], '/child t-node/', '[GET] suggest on parent and child'],
+      [["GET /?p=".join('|', map {File::Spec->rel2abs( dirname(__FILE__))."/treebanks/pdt_test/data/cmpr9410_001.t.gz#t-cmpr9410-001-p2s1w$_"} qw/2 4/)." HTTP/1.1",""], '/sibling t-node/', '[GET] suggest on siblings'],
+      [["GET /?p=".join('|', map {File::Spec->rel2abs( dirname(__FILE__))."/treebanks/pdt_test/data/cmpr9410_001.$_.gz#$_-cmpr9410-001-p2s1w2"} qw/a t/)." HTTP/1.1",""], '/lex\.rf \$[a-z],/', '[GET] suggest on two layers'],
+      [["GET /?p=".join('|', map {File::Spec->rel2abs( dirname(__FILE__))."/treebanks/pdt_test/data/cmpr9410_001.t.gz#t-cmpr9410-001-p4s1w$_"} qw/13 12/)." HTTP/1.1",""], '/descendant t-node/', '[GET] suggest on descendant'],
+      [["GET /?p=".join('|', map {File::Spec->rel2abs( dirname(__FILE__))."/treebanks/pdt_test/data/cmpr9410_001.t.gz#t-cmpr9410-001-p10s2$_"} qw/w23 a8/)." HTTP/1.1",""], '/target_node\.rf \$[a-z],/', '[GET] suggest on coref'],
+      [["GET /?p=".join('|', map {File::Spec->rel2abs( dirname(__FILE__))."/treebanks/pdt_test/data/cmpr9410_001.t.gz#t-cmpr9410-001-p10s2$_"} qw/w23 a8/)." HTTP/1.1",""], '/target_node\.rf \$[a-z],/', '[GET] suggest on coref'],
+      [["GET /?p=".join('|', map {File::Spec->rel2abs( dirname(__FILE__))."/treebanks/pdt_test/data/$_"} qw/cmpr9410_001.t.gz#t-cmpr9410-001-p2s1w2 mf920922_001.t.gz#t-mf920922-001-p1s1w1/)." HTTP/1.1",""], '/(?:t-node \$[a-z].*){2}/ms', '[GET] suggest on two different files'],
+
+      [["GET /?p=".File::Spec->rel2abs( dirname(__FILE__))."/treebanks/treex_test/data/1.treex.gz#a_tree-cs-fiction-b1-00train-f00001-s1-n3773 HTTP/1.1",""], '/a_tree-cs-fiction-b1-00train-f00001-s1-n3773/', '[GET] suggest on one treex node '],
 );
+
+my @message_tests_TODOs = (
+      [["GET /?p=".join('|', map {my $tmp=$_; $tmp=~s/==/\/data\//;File::Spec->rel2abs( dirname(__FILE__))."/treebanks/$tmp"} qw/pdt_test==cmpr9410_001.t.gz#t-cmpr9410-001-p2s1w2 treex_test==1.treex.gz#a_tree-cs-fiction-b1-00train-f00001-s1-n3773/)." HTTP/1.1",""], '/error/i', '[GET] suggest on two different schema files '],
+);
+
+
 foreach my $message_test (@message_tests) {
   my ($message, $expected, $description) = @$message_test;
   like(fetch(@$message), $expected, $description);
   select(undef,undef,undef,0.2); # wait a sec
 }
 
+TODO: {
+  local $TODO = 'Failing ...';
+  foreach my $message_test (@message_tests_TODOs) {
+    my ($message, $expected, $description) = @$message_test;
+    like(fetch(@$message), $expected, $description);
+    select(undef,undef,undef,0.2); # wait a sec
+  }
+}
 
 is(kill(9,$pid),1,'PML-TQ suggest server has been stopped.');
 wait or die "counldn't wait for PML-TQ suggest server process completion";

@@ -149,6 +149,74 @@ sub apply_file_suffix {
 
     # hey, caller, you should redraw after this!
 }
+
+#TODO: document & test this unclear function
+sub _find_tree_no {
+    my ( $fsfile, $root, $list ) = @_;
+    my $n = undef;
+
+    # hm, we have a node, but don't know to which tree
+    # it belongs
+    my $trees_type = $fsfile->metaData('pml_trees_type');
+    my $root_type  = $root->type();
+
+    #TODO: empty? or defined???
+    if ( $trees_type and $root_type ) {
+        my $trees_type_is = $trees_type->get_decl_type();
+        my %paths;
+        my $is_sequence;
+        my $found;
+        my @elements;
+        if ( $trees_type_is == Treex::PML::Schema::PML_LIST_DECL() ) {
+            @elements = [ 'LM', $trees_type->get_content_decl() ];
+        }
+        elsif ( $trees_type_is == Treex::PML::Schema::PML_SEQUENCE_DECL() ) {
+
+            # Treex::PML::Schema::Element::get_name(),
+            #           ::Schema::Decl::get_content_decl()
+            @elements = map { [ $_->get_name(), $_->get_content_decl() ] }
+                $trees_type->get_elements();
+            $is_sequence = 1;
+        }
+        else {
+            return -1;
+        }
+
+        for my $el (@elements) {
+            $paths{ $el->[0] } = [
+                $trees_type->get_schema->find_decl(
+                    sub {
+                        $_[0] == $root_type;
+                    },
+                    $el->[1],
+                    {}
+                )
+            ];
+            if ( @{ $paths{ $el->[0] } } ) {
+                $found = 1;
+            }
+        }
+        return -1 if !$found;
+    TREE:
+        for my $i ( 0 .. $#$list ) {
+            my $tree = $list->[$i];
+            my $paths
+                = $is_sequence
+                ? $paths{ $tree->{'#name'} }
+                : $paths{LM};
+            for my $p ( @{ $paths || [] } ) {
+                for my $value ( $tree->all($p) ) {
+                    if ( $value == $root ) {
+                        $n = $i;
+                        last TREE;
+                    }
+                }
+            }
+        }
+    }
+    return $n;
+}
+
 #######################################################################################
 ### from TrEd::Utils
 # Usage         : parse_file_suffix($filename)
