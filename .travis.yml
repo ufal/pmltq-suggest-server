@@ -19,8 +19,10 @@ before_install:
   - perlbrew use $PERLBREW_PERL@travis
   - perl -V
   - cpan-install ExtUtils::MakeMaker~6.31 Dist::Zilla
+  - "cpan-install $(dzil authordeps --missing --versions | grep -v '^inc::' | sed -e's/ = 0$//' -e's/ = /~/')"
 
 install:
+  - dzil authordeps --missing | cpanm
   - "cpan-install $(dzil listdeps --missing --versions | grep -v '^inc::' | sed -e's/ = 0$//' -e's/ = /~/')"
   - "cpan-install $(dzil listdeps --develop --missing --versions | grep -v '^inc::' | sed -e's/ = 0$//' -e's/ = /~/')"
   - cpan-install --deps
