@@ -94,6 +94,7 @@ sub servePMLTQ {
     $pmltq = PMLTQ::Suggest::make_pmltq(
       \@positions,
       (@names ? (reserved_names => {map {$_=>1} @names}) : ()),
+      verbose => 1
      );
   };
   if (!defined $pmltq) {

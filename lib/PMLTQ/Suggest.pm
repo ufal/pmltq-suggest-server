@@ -38,7 +38,7 @@ sub make_pmltq {
     }
     push @nodes, [ $win->{currentNode}, $win->{FSFile} ];
   }
-  print STDERR "generating query";
+  print STDERR "generating query\n" if $opts{verbose};
   return nodes_to_pmltq(\@nodes,\%opts);
 }
 
@@ -192,7 +192,8 @@ sub resolve_pmlref {
       return $reffile->lookup_id($id);
     }
   } elsif ($ref=~m{\#?([^#]+)}) {
-    return GetNodeByID($1);
+    return GetNodeByID($1, $fsfile);
+#    return GetNodeByID($1);
   }
   return undef;
 }
@@ -284,10 +285,10 @@ sub member_to_pmltq {
 
 sub GetNodeByID {
     my ( $rf, $fsfile ) = @_;
-    if (!defined $fsfile) {
-            warn("GetNodeByID TODO: FIX THIS !!!");
+#    if (!defined $fsfile) {
+#            warn("GetNodeByID TODO: FIX THIS !!!");
         #$fsfile = $grp->{FSFile};
-    }
+#    }
     $rf =~ s/^.*#//;
     return GetNodeHash($fsfile)->{$rf};
 }
@@ -306,7 +307,7 @@ sub GetNodeHash {
     if (!ref $_[0]) {
         shift;
     }
-    warn("GetNodeHash TODO: fix this:");
+    #warn("GetNodeHash TODO: fix this:");
     #my $fsfile = $_[0] || $grp->{FSFile};
     my $fsfile = $_[0];
     return {} if !ref $fsfile;
