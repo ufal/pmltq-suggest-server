@@ -13,6 +13,7 @@ lib/PMLTQ/Suggest/Server.pm
 lib/PMLTQ/Suggest/Utils.pm
 script/pmltq-suggest-server
 t/00-compile.t
+t/command.t
 t/server.t
 t/treebanks/noschema_test/noschema.pml
 t/treebanks/pdt_test/data/cmpr9410_001.a.gz
