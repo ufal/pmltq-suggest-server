@@ -2,6 +2,10 @@ package PMLTQ::Suggest;
 
 # ABSTRACT: Tool for generating simple PMLTQ query based on given nodes
 
+=head1 NAME
+
+PMLTQ::Suggest - Tool for generating simple PMLTQ query based on given nodes
+
 =head1 DESCRIPTION
 
 This is an implementation of a Suggest server and a plugin for PML-TQ command-line client.
