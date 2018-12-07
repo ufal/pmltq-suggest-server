@@ -4,11 +4,16 @@ Revision history for {{$dist->name}}
  [API CHANGES]
 
  [BUG FIXES]
- - fix missing prereqs
 
  [DOCUMENTATION]
 
  [ENHANCEMENTS]
+
+0.0.3
+ - Released: 2018-12-07 09:47:07 UTC
+
+ [BUG FIXES]
+ - fix missing prereqs
 
 0.0.2
  - Released: 2018-05-22 09:55:35 UTC
