@@ -4,10 +4,16 @@ Revision history for {{$dist->name}}
  [API CHANGES]
 
  [BUG FIXES]
- - increase minimal HTTP::Server::Simple::CGI version in order to fix tests
+
  [DOCUMENTATION]
 
  [ENHANCEMENTS]
+
+1.0.1
+ - Released: 2019-06-26 18:20:23 UTC
+
+ [BUG FIXES]
+ - increase minimal HTTP::Server::Simple::CGI version in order to fix tests
 
 1.0.0
  - Released: 2019-06-26 08:52:54 UTC
