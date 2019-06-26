@@ -2,9 +2,11 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
  [API CHANGES]
+ - allow multiple resource paths: ---resource_path path1 path2
 
  [BUG FIXES]
-
+ - fix missing PMLTQ::Base dependency
+ 
  [DOCUMENTATION]
 
  [ENHANCEMENTS]
