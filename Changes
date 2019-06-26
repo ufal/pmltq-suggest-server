@@ -4,7 +4,7 @@ Revision history for {{$dist->name}}
  [API CHANGES]
 
  [BUG FIXES]
-
+ - increase minimal HTTP::Server::Simple::CGI version in order to fix tests
  [DOCUMENTATION]
 
  [ENHANCEMENTS]

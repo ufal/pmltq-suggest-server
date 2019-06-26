@@ -8,6 +8,7 @@ use PMLTQ::Suggest::Utils;
 use PMLTQ::Suggest;
 
 our $permitted_paths_re = '^(?:)/';
+our %methods = map {$_ => 1} qw/GET/;
 
 sub run {
     my $self = shift;
@@ -22,7 +23,8 @@ sub handle_request {
   my ($self, $cgi) = @_;
   eval {
       my $path = $cgi->path_info();
-      if ($path eq '/') {
+      my $method = $cgi->request_method();
+      if ($path eq '/' and exists($methods{$method})) {
           servePMLTQ($self,$cgi);
       } else {
           notFound($cgi);

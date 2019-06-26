@@ -30,6 +30,8 @@ my @message_tests = (
       [["DELETE / HTTP/1.1",""], '/Not found/', '[DELETE] Not found'],
       [["PATCH / HTTP/1.1","Content-Length: 0",""], '/Not found/', '[PATCH] Not found'],
       [["OPTIONS / HTTP/1.1","Content-Length: 0",""], '/Not found/', '[OPTIONS] Not found'],
+      [["POST /?p=".File::Spec->rel2abs( dirname(__FILE__))."/treebanks/pdt_test/data/cmpr9410_001.t.gz#t-cmpr9410-001-p2s1w2 HTTP/1.1",""], '/Not found/', '[POST] Not found -> used invalid method'],
+      [["DELETE /?p=".File::Spec->rel2abs( dirname(__FILE__))."/treebanks/pdt_test/data/cmpr9410_001.t.gz#t-cmpr9410-001-p2s1w2 HTTP/1.1",""], '/Not found/', '[DELETE] Not found -> used invalid method'],
 
       [["GET /?p=treebanks/pdt_test/cmpr9410_001.t.gz HTTP/1.1",""], '/Not found/', '[GET] Not found - path has been permitted'],
       [["GET /?p=".File::Spec->rel2abs( dirname(__FILE__))."/treebanks/pdt_test/data/cmpr9410_001.t.gz HTTP/1.1",""], '/Not found/', '[GET] Not found - path does not contain address'],
