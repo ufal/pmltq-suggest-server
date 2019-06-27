@@ -4,11 +4,17 @@ Revision history for {{$dist->name}}
  [API CHANGES]
 
  [BUG FIXES]
- - fix missing semicolon, add script/pmltq-suggest-server to compilation tests
 
  [DOCUMENTATION]
 
  [ENHANCEMENTS]
+
+1.0.4
+ - Released: 2019-06-27 11:43:24 UTC
+
+ [BUG FIXES]
+ - fix missing semicolon, add script/pmltq-suggest-server to compilation
+   tests
 
 1.0.3
  - Released: 2019-06-27 11:10:32 UTC
