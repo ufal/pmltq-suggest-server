@@ -21,7 +21,7 @@ GetOptions(
 	'--host=s' => \$host,
 	'--prefork=i' => \$prefork,
 	'--resources-path=s{,}' => \@resources_path,
-	)
+	);
 
 my $inputenc = "UTF-8";
 
