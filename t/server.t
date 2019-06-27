@@ -29,7 +29,9 @@ my @message_tests = (
       [["PUT / HTTP/1.1","Content-Length: 0",""], '/Not found/', '[PUT] Not found'],
       [["DELETE / HTTP/1.1",""], '/Not found/', '[DELETE] Not found'],
       [["PATCH / HTTP/1.1","Content-Length: 0",""], '/Not found/', '[PATCH] Not found'],
-      [["OPTIONS / HTTP/1.1","Content-Length: 0",""], '/Not found/', '[OPTIONS] Not found'],
+      ## OPTIONS is not supported by HTTP::Server::Simple::CGI <v0.51 and HTTP::Server::Simple::CGI does not provide version info
+      ##[["OPTIONS / HTTP/1.1","Content-Length: 0",""], '/Not found/', '[OPTIONS] Not found'],
+      
       [["POST /?p=".File::Spec->rel2abs( dirname(__FILE__))."/treebanks/pdt_test/data/cmpr9410_001.t.gz#t-cmpr9410-001-p2s1w2 HTTP/1.1",""], '/Not found/', '[POST] Not found -> used invalid method'],
       [["DELETE /?p=".File::Spec->rel2abs( dirname(__FILE__))."/treebanks/pdt_test/data/cmpr9410_001.t.gz#t-cmpr9410-001-p2s1w2 HTTP/1.1",""], '/Not found/', '[DELETE] Not found -> used invalid method'],
 
