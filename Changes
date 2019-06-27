@@ -4,12 +4,18 @@ Revision history for {{$dist->name}}
  [API CHANGES]
 
  [BUG FIXES]
- - fix installation bug -> decreasing HTTP::Server::Simple::CGI version to 0
- - fix tests when locale is not english
 
  [DOCUMENTATION]
 
  [ENHANCEMENTS]
+
+1.0.2
+ - Released: 2019-06-27 09:14:46 UTC
+
+ [BUG FIXES]
+ - fix installation bug -> decreasing HTTP::Server::Simple::CGI version to
+   0
+ - fix tests when locale is not english
 
 1.0.1
  - Released: 2019-06-26 18:20:23 UTC
