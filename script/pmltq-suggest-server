@@ -3,7 +3,7 @@
 use warnings;
 use strict;
 
-use GetOpt::Long;
+use Getopt::Long;
 use File::Find::Rule;
 use File::Spec;
 use File::Basename 'dirname';
