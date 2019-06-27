@@ -1,13 +1,4 @@
-Revision history for {{$dist->name}}
-
-{{$NEXT}}
- [API CHANGES]
-
- [BUG FIXES]
-
- [DOCUMENTATION]
-
- [ENHANCEMENTS]
+Revision history for PMLTQ-Suggest
 
 1.0.2
  - Released: 2019-06-27 09:14:46 UTC
