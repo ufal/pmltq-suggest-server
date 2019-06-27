@@ -5,6 +5,8 @@ Revision history for {{$dist->name}}
 
  [BUG FIXES]
  - fix installation bug -> decreasing HTTP::Server::Simple::CGI version to 0
+ - fix tests when locale is not english
+
  [DOCUMENTATION]
 
  [ENHANCEMENTS]
