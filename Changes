@@ -8,6 +8,7 @@ Revision history for {{$dist->name}}
  [DOCUMENTATION]
 
  [ENHANCEMENTS]
+ - resources finder follows symlinks when option --resources-path-follow is set
 
 1.0.4
  - Released: 2019-06-27 11:43:24 UTC
