@@ -1,0 +1,86 @@
+{
+   "abstract" : "Tool for generating simple PMLTQ query based on given nodes",
+   "author" : [
+      "Maty\u00e1\u0161 Kopp <matyas.kopp@gmail.com>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 6.008, CPAN::Meta::Converter version 2.150010",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : 2
+   },
+   "name" : "PMLTQ-Suggest",
+   "no_index" : {},
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Module::Build" : "0.28"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build" : "0.28"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "File::Find::Rule" : "0.34",
+            "Getopt::Long" : "0",
+            "HTTP::Server::Simple::CGI" : "0",
+            "List::MoreUtils" : "0",
+            "PMLTQ" : "v3.0.1",
+            "PMLTQ::Commands" : "v2.0.3",
+            "Treex::PML" : "2.18",
+            "URI" : "0",
+            "URI::file" : "0"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "File::Spec" : "0",
+            "IO::Handle" : "0",
+            "IPC::Open3" : "0",
+            "Test::More" : "0"
+         }
+      }
+   },
+   "provides" : {
+      "PMLTQ::Command::suggest" : {
+         "file" : "lib/PMLTQ/Command/suggest.pm",
+         "version" : "v1.1.0"
+      },
+      "PMLTQ::Suggest" : {
+         "file" : "lib/PMLTQ/Suggest.pm",
+         "version" : "v1.1.0"
+      },
+      "PMLTQ::Suggest::Server" : {
+         "file" : "lib/PMLTQ/Suggest/Server.pm",
+         "version" : "v1.1.0"
+      },
+      "PMLTQ::Suggest::Utils" : {
+         "file" : "lib/PMLTQ/Suggest/Utils.pm",
+         "version" : "v1.1.0"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/ufal/pmltq-suggest-server/issues"
+      },
+      "homepage" : "http://ufal.mff.cuni.cz/pmltq/",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/ufal/pmltq-suggest-server.git",
+         "web" : "https://github.com/ufal/pmltq-suggest-server"
+      }
+   },
+   "version" : "1.1.0",
+   "x_authority" : "cpan:MATY",
+   "x_authority_from_module" : "PMLTQ::Suggest",
+   "x_permissions_from_module" : "PMLTQ::Suggest",
+   "x_serialization_backend" : "Cpanel::JSON::XS version 3.0225"
+}
+
